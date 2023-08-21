@@ -1,5 +1,6 @@
 import 'package:advisor/3_application/core/services/theme_service.dart';
-import 'package:advisor/3_application/pages/advice/bloc/advice_bloc.dart';
+// import 'package:advisor/3_application/pages/advice/bloc/advice_bloc.dart';
+import 'package:advisor/3_application/pages/advice/cubit/advicer_cubit.dart';
 import 'package:advisor/3_application/pages/advice/widgets/advice_field.dart';
 import 'package:advisor/3_application/pages/advice/widgets/custom_button.dart';
 import 'package:advisor/3_application/pages/advice/widgets/error_message.dart';
@@ -12,8 +13,8 @@ class AdvicerPageWrapperProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AdviceBloc>(
-      create: (context) => AdviceBloc(),
+    return BlocProvider<AdvicerCubit>(
+      create: (context) => AdvicerCubit(),
       child: const AdvicePage(),
     );
   }
@@ -44,9 +45,10 @@ class AdvicePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 50),
         child: Column(
           children: [
-            Expanded(child: Center(child: BlocBuilder<AdviceBloc, AdviceState>(
+            Expanded(child:
+                Center(child: BlocBuilder<AdvicerCubit, AdvicerCubtState>(
               builder: (context, state) {
-                if (state is AdviceInitial) {
+                if (state is AdvicerInitial) {
                   return Text(
                     'Your advice is waiting for you',
                     style: themeData.textTheme.displayLarge,
