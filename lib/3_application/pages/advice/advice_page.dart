@@ -1,7 +1,23 @@
 import 'package:advisor/3_application/core/services/theme_service.dart';
+import 'package:advisor/3_application/pages/advice/bloc/advice_bloc.dart';
+import 'package:advisor/3_application/pages/advice/widgets/advice_field.dart';
 import 'package:advisor/3_application/pages/advice/widgets/custom_button.dart';
+import 'package:advisor/3_application/pages/advice/widgets/error_message.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+
+class AdvicerPageWrapperProvider extends StatelessWidget {
+  const AdvicerPageWrapperProvider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<AdviceBloc>(
+      create: (context) => AdviceBloc(),
+      child: const AdvicePage(),
+    );
+  }
+}
 
 class AdvicePage extends StatelessWidget {
   const AdvicePage({super.key});
@@ -24,10 +40,31 @@ class AdvicePage extends StatelessWidget {
               })
         ],
       ),
-      body: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 50),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 50),
         child: Column(
-          children: [CustomButton()],
+          children: [
+            Expanded(child: Center(child: BlocBuilder<AdviceBloc, AdviceState>(
+              builder: (context, state) {
+                if (state is AdviceInitial) {
+                  return Text(
+                    'Your advice is waiting for you',
+                    style: themeData.textTheme.displayLarge,
+                  );
+                } else if (state is AdviceStateLoading) {
+                  return CircularProgressIndicator(
+                    color: themeData.colorScheme.secondary,
+                  );
+                } else if (state is AdviceStateLoaded) {
+                  return AdviceField(advice: state.advice);
+                } else if (state is AdviceStateError) {
+                  return ErrorMessage(message: state.message);
+                }
+                return const SizedBox.shrink();
+              },
+            ))),
+            const SizedBox(height: 200, child: Center(child: CustomButton()))
+          ],
         ),
       ),
     );
