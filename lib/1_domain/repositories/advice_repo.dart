@@ -1,5 +1,7 @@
 import 'package:advisor/1_domain/enttities/advice_entity.dart';
+import 'package:advisor/1_domain/failures/failures.dart';
+import 'package:dartz/dartz.dart';
 
 abstract class AdviceRepo {
-  Future<AdviceEntity> getAdviceFromDataSource();
+  Future<Either<Failure, AdviceEntity>> getAdviceFromDataSource();
 }
